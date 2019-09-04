@@ -42,7 +42,7 @@ dp adddata(double x, double exp, double th)
 
 void readData(const char *inputfile, const char *outputfile, vector<dp> *arr)
 {
-  //  showStatus();
+    //  showStatus();
 
     ifstream datafile(inputfile);
     ofstream output(outputfile);

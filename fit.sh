@@ -1,3 +1,3 @@
 #!/bin/sh
-g++ readData.cpp variance.cpp chiSquared.cpp generateExpData.cpp genData.cpp genTheoreticalData.cpp energyCalculation.cpp main.cpp -o a.out
-./a.out
+g++ ./src/readData.cpp ./src/variance.cpp ./src/chiSquared.cpp ./src/generateExpData.cpp ./src/genData.cpp ./src/genTheoreticalData.cpp ./src/energyCalculation.cpp ./src/main.cpp -o asrc.out
+./asrc.out

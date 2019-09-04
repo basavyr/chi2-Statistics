@@ -2,7 +2,7 @@
 #include "generateExpData.h"
 #include "genTheoreticalData.h"
 
-ofstream output("./data/inputData.dat");
+ofstream output("/mnt/c/Users/rober/OneDrive/Desktop/PIPELINE/lu163_august2019_2paramMinimize/cpp-files/fitAlgorithm/chi2-Statistics/data/inputData.dat");
 
 void showGenDataStatus()
 {
@@ -27,9 +27,12 @@ void generateData(double param1, double param2)
     vector<double> tsd3th;
     vector<double> tsd4th;
 
+    //CREATE EXPERIMENTAL DATA SET
     generateExpData(&spin1, &spin2, &spin3, &spin4, &tsd1, &tsd2, &tsd3, &tsd4);
     // cout << "getting theoretical data..." << endl;
+    //CREATE HTOERETICAL DATA SET
     generateThData(param1, param2, spin1, spin2, spin3, spin4, &tsd1th, &tsd2th, &tsd3th, &tsd4th);
+
     for (int i = 0; i < spin1.size(); ++i)
     {
         output << spin1.at(i) << "," << tsd1.at(i) << "," << tsd1th.at(i);

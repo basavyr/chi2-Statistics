@@ -27,38 +27,59 @@ public:
  */
 vector<P> xx;
 
-vector<dp> arr;
-
-void generateArray(vector<dp> arr, vector<double> *a1, vector<double> *a2)
+void generateArray(vector<dp> a, vector<double> *a1, vector<double> *a2)
 {
-    if (arr.size())
-        arr.clear();
-    for (int i = 0; i < arr.size(); ++i)
+    /*     if (a.size())
+        a.clear(); */
+    if (a.size())
     {
-        a1->push_back(arr.at(i).exp);
-        a2->push_back(arr.at(i).th);
+        for (int i = 0; i < a.size(); ++i)
+        {
+            a1->push_back(a.at(i).exp);
+            a2->push_back(a.at(i).th);
+        }
     }
 }
 
+vector<dp> arr;
+
 int main()
 {
-    const char *input = "./data/inputData.dat";
-    const char *output = "./data/outputData.dat";
+    const char *input = "/mnt/c/Users/rober/OneDrive/Desktop/PIPELINE/lu163_august2019_2paramMinimize/cpp-files/fitAlgorithm/chi2-Statistics/data/inputData.dat";
+    const char *output = "/mnt/c/Users/rober/OneDrive/Desktop/PIPELINE/lu163_august2019_2paramMinimize/cpp-files/fitAlgorithm/chi2-Statistics/data/outputData.dat";
+    const char *chiOutput = "/mnt/c/Users/rober/OneDrive/Desktop/PIPELINE/lu163_august2019_2paramMinimize/cpp-files/fitAlgorithm/chi2-Statistics/data/chiOutput.dat";
+
+    //outputfile for chi2 results (depending on IZERO and V)
+    ofstream outputchi2(chiOutput);
+
     double result;
     vector<double> arrexp, arrth;
     vector<double> spin1, spin2, spin3, spin4;
     vector<double> tsd1, tsd2, tsd3, tsd4;
     clock_t myclock;
+    vector<double> arrChi2;
     myclock = clock();
     //readData(input, output, &arr);
-
     //SIMULATION ALGORITHM
-    generateData(70, 3);
-    readData(input, output, &arr);
-    generateArray(arr, &arrexp, &arrth);
-    cout << arrexp.size() << endl;
-    showChiSquared(arrexp, arrth, &result);
-    cout << result << endl;
+    for (int i = 1; i <= 2; ++i)
+    {
+        for (double v = 0.05; v <= 10; v += 5)
+        {
+            generateData((double)i, v);
+            readData(input, output, &arr);
+            generateArray(arr, &arrexp, &arrth);
+            showChiSquared(arrexp, arrth, &result);
+            arrChi2.push_back(result);
+            //            cout << i << " " << v << " " << result << endl;
+        }
+    }
+    for (vector<double>::iterator it = arrChi2.begin(); it != arrChi2.end(); ++it)
+    {
+        outputchi2 << *it << endl;
+    }
+
+    // cout << arr.size() << endl;
+    //cout << arrexp.size() << endl;
     /*     for (int i = 0; i < arr.size(); ++i)
     {
         arrexp.push_back(arr.at(i).exp);
@@ -67,6 +88,7 @@ int main()
 
     /*
     generateExpData(&spin1, &spin2, &spin3, &spin4, &tsd1, &tsd2, &tsd3, &tsd4);
+    myclock = clock() - myclock;
     cout << "array 1" << endl;
     for (vector<double>::iterator it = tsd1.begin(); it != tsd1.end(); ++it)
         cout << *it << " ";
@@ -83,8 +105,6 @@ int main()
     for (vector<double>::iterator it = tsd4.begin(); it != tsd4.end(); ++it)
         cout << *it << " ";
     cout << endl;
-   */
-    myclock = clock() - myclock;
     // cout << "Full exec took " << (float)myclock / CLOCKS_PER_SEC << " seconds";
     cout << endl;
     /*   cout << arrexp.size() << endl;
