@@ -3,7 +3,7 @@
 #include "chiSquared.h"
 #include "generateExpData.h"
 #include "genData.h"
-
+#include "minimize.h"
 #include <iostream>
 #include <ctime>
 
@@ -61,9 +61,9 @@ int main()
     myclock = clock();
     //readData(input, output, &arr);
     //SIMULATION ALGORITHM
-    for (int i = 1; i <= 2; ++i)
+    for (int i = 1; i <= 120; ++i)
     {
-        for (double v = 0.05; v <= 10; v += 5)
+        for (double v = 0.1; v <= 10.0; v += 0.1)
         {
             generateData((double)i, v);
             readData(input, output, &arr);
@@ -77,7 +77,11 @@ int main()
     {
         outputchi2 << *it << endl;
     }
-
+    result = 0;
+    computeMinimum(arrChi2, &result);
+    cout << endl;
+    cout << result;
+    cout << endl;
     // cout << arr.size() << endl;
     //cout << arrexp.size() << endl;
     /*     for (int i = 0; i < arr.size(); ++i)

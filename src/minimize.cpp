@@ -2,11 +2,12 @@
 
 void showStatusMinimize()
 {
-    cout<<"minimizing function...";
-    cout<<endl;
+    cout << "minimizing function...";
+    cout << endl;
 }
 
-void computeMinimum(vector<double> a,double *result)
+void computeMinimum(vector<double> a, double *result)
 {
-    showStatusMinimize();
+    //showStatusMinimize();
+    *result = *min_element(a.begin(), a.end());
 }
