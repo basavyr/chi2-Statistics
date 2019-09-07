@@ -176,6 +176,7 @@ double energyBand3(double spin, double oddSpin, double izero, double beta, doubl
 double energyBand4(double spin, double oddSpin, double izero, double beta, double gamma, double particlePotential)
 {
     double rez, eZero, spinZero = 6.5, secondSpin = 4.5;
+    double singleParticleEnergy = -0.334;
     //excitation energy of the first TSD1 band I=13/2  (keep constant)
     eZero = minHamiltonian(spinZero, oddSpin, izero, beta, gamma, particlePotential) + 0.5 * (Omega1(spinZero, oddSpin, izero, beta, gamma, particlePotential) + Omega2(spinZero, oddSpin, izero, beta, gamma, particlePotential));
     oddSpin = secondSpin;
@@ -183,7 +184,7 @@ double energyBand4(double spin, double oddSpin, double izero, double beta, doubl
     //ACTUAL ENERGY OF THE BAND LEVEL I
     rez = minHamiltonian(spin - 3.0, secondSpin, izero, beta, gamma, particlePotential) + 0.5 * (7.0 * Omega1(spin - 3.0, secondSpin, izero, beta, gamma, particlePotential) + Omega2(spin - 3.0, secondSpin, izero, beta, gamma, particlePotential));
 
-    return rez - eZero;
+    return rez - eZero + singleParticleEnergy;
 }
 
 double chiSuqaredMinimize(double izero, double particlePotential)
@@ -296,13 +297,19 @@ void computeMinimum(vector<dp> a, dp *result)
     cout << "Minimum is result " << result << endl;
 }
  */
+
+static bool customCompare(const dp &x, const dp &y)
+{
+    return x.chi2 < y.chi2;
+}
+
 int main()
 {
     vector<dp> chi2Array;
     dp result;
     double minValue = 123456789.0, pi = 3.141592654;
     double w1, w2, w3;
-    for (int i = 1; i <= 120; ++i)
+    for (double i = 45; i <= 55; i+=0.1)
     {
         for (double v = 0.01; v <= 10.0; v += 0.1)
         {
@@ -310,12 +317,16 @@ int main()
                 chi2Array.push_back(adddata((double)i, v, chiSuqaredMinimize((double)i, v)));
         }
     }
+    //sort(chi2Array.begin(), chi2Array.end(), [](vector<dp> &a1, vector<dp> &a2) { return });
+    sort(chi2Array.begin(), chi2Array.end(), customCompare);
     for (int i = 0; i < chi2Array.size(); ++i)
-        output << chi2Array.at(i).izero << " " << chi2Array.at(i).particlePotential << " " << chi2Array.at(i).chi2 << "\n";
-
-    auto min_chi2 = std::minmax_element(chi2Array.begin(), chi2Array.end(),
+        output
+            << chi2Array.at(i).izero << " " << chi2Array.at(i).particlePotential << " " << chi2Array.at(i).chi2 << "\n";
+    //SHOW MINIMUM using lambda function
+    /*  auto min_chi2 = std::minmax_element(chi2Array.begin(), chi2Array.end(),
                                         [](dp const &el1, dp const &el2) { return el1.chi2 < el2.chi2; });
-    cout << min_chi2.first->chi2 << endl;
+    cout << min_chi2.first->chi2 << endl; */
     //computeMinimum(chi2Array, &result);
+    cout << "Program finished... ----> " << chi2Array.at(0).chi2 << endl;
     return 0;
 }
