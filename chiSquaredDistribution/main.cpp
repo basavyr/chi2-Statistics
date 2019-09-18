@@ -130,6 +130,8 @@ void gammaContinuedFractions(double *gcf, double a, double x, double *lng)
 }
 
 //computes the P(a,x) incomplete gamma function (Numerical Recipes C)
+//for the incomplete gamma function \gamma  => \gamma=Px\Gamma
+//P(s,x) is the cumulative distribution function for Gamma random variables with shape parameter {\displaystyle s}s and scale parameter 1.
 double gammaP(double a, double x)
 {
     const char *err;
@@ -176,6 +178,16 @@ double gammaQ(double a, double x)
         gammaContinuedFractions(&gammaFractions, a, x, &lnGamma);
         return gammaFractions;
     }
+}
+
+double IGF_upper(double a, double x)
+{
+    return gammaQ(a, x) * tgamma(a);
+}
+
+double IGF_lower(double a, double x)
+{
+    return gammaP(a, x) * tgamma(a);
 }
 
 double incompleteGF(double S, double Z)
@@ -244,7 +256,7 @@ int main()
         arrTh[i] = i + 0.0;
     }
      */
-    cout << getCriticalValue(arrExp, arrTh, dim) << endl;
+    cout << getCriticalValue(arrExp, arrTh, dim) / dim << endl;
     cout << chiSquared(dim, getCriticalValue(arrExp, arrTh, dim)) << endl;
     //normal random generator
     /*
@@ -254,8 +266,17 @@ int main()
     std::default_random_engine re;
     double v = unif(re);
     cout << v << " " << x << endl; */
-    cout << tgamma(4.0) << " " << numericalGamma(4.0) << endl;
-    cout << log(tgamma(4.0)) << " " << logGamma(4.0) << endl;
-    cout << gammaP(3, 2) << " " << gammaQ(3, 2) << " " << incompleteGF(3, 2) << endl;
+    double t1, t2;
+    t1 = 4;
+    t2 = 5;
+    for (int i = 1; i <= 10; ++i)
+    {
+        for (int j = 1; j <= 10; ++j)
+        {
+            if (i > j)
+                cout << i << " " << j << " " << IGF_lower(i, j) << " " << IGF_upper(i, j) << " " << incompleteGF(i, j) << endl;
+        }
+    }
+    // cout << IGF_upper(t1, t2) << " " << IGF_lower(t1, t2) << " " << incompleteGF(t1, t2) << endl;
     return 0;
 }
